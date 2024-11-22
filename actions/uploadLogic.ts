@@ -52,7 +52,7 @@ export async function upload(data: FormData): Promise<{ success?: string; error?
       await browser.close();
     } else {
       // Handle non-XLSX files by saving them directly
-      path = join(tmpDirectory + file.name);
+      path = join(tmpDirectory , file.name);
       await writeFile(path, buffer);
     }
 
