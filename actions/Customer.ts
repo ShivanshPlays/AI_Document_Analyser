@@ -17,10 +17,10 @@ type ResponseFormat = {
 export async function getAllCustomers() {
   try {
     const customers = await prismadb.customer.findMany();
-    // console.log(customers)
+    console.log(customers)
     return customers;
   } catch (error) {
-    throw new Error("Failed to fetch customers");
+    console.log(error)
   }
 }
 

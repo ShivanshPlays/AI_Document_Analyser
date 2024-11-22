@@ -1,5 +1,5 @@
 "use server";
-
+import { tmpdir } from "os";
 import { processDocument } from "@/actions/documentProcessing";
 import { processImage } from "@/actions/imageProcessing";
 import { writeFile } from "fs/promises";
@@ -8,9 +8,10 @@ import { read, utils } from "xlsx";
 import { launch } from "puppeteer";
 
 export async function upload(data: FormData): Promise<{ success?: string; error?: string }> {
+  const tmpDirectory = tmpdir();
   try {
     const file: File | null = data.get("file") as unknown as File;
-
+    console.log(tmpDirectory)
     if (!file || file.size === 0) {
       return {
         error: "No file uploaded",
@@ -20,7 +21,7 @@ export async function upload(data: FormData): Promise<{ success?: string; error?
     const bytes = await file.arrayBuffer();
     let buffer = Buffer.from(bytes);
 
-    const currentDirectory = process.cwd();
+    // const currentDirectory = process.cwd();
     let path;
 
     if (file.name.endsWith(".xlsx")) {
@@ -34,20 +35,24 @@ export async function upload(data: FormData): Promise<{ success?: string; error?
       const html = utils.sheet_to_html(sheet);
 
       // Launch Puppeteer to convert HTML to PDF
-      const browser = await launch();
+      const browser = await launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      });
       const page = await browser.newPage();
       await page.setContent(html);
 
       // Create the PDF from the HTML content
       const num = Math.random();
-      path = currentDirectory + "/tmp" + "/converted_" + num + ".pdf";
+      path = join(tmpDirectory, `converted_${num}.pdf`);
+
       await page.pdf({ path: path, format: "A4" });
 
       // Close the browser instance
       await browser.close();
     } else {
       // Handle non-XLSX files by saving them directly
-      path = join(currentDirectory + "/tmp", file.name);
+      path = join(tmpDirectory + file.name);
       await writeFile(path, buffer);
     }
 

@@ -127,7 +127,7 @@ export async function processImage(path: string) {
         quantity: invoice.quantity,
         tax: invoice.tax,
         totalAmount: invoice.totalAmount,
-        date: new Date(invoice.date),
+        date: invoice.date,
       })),
     });
 

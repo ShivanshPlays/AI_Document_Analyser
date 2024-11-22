@@ -21,7 +21,7 @@ export const fetchCustomers = createAsyncThunk<Customer[]>(
   'Customers/fetch',
   async () => {
     const Customers = await getAllCustomers(); // Call the server action
-    return Customers;
+    return Customers || [];
   }
 );
 

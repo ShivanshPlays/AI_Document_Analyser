@@ -21,25 +21,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  createInvoice,
-  deleteInvoice,
-  updateInvoice,
-} from "@/actions/Invoice";
+import { createInvoice, deleteInvoice, updateInvoice } from "@/actions/Invoice";
 import { AlertModal } from "@/components/alert-modal";
 
 const formSchema = z.object({
   serialNumber: z.string().min(1, "Serial Number is required"), // Unique string
   customerName: z.string().min(1, "Customer Name is required"), // Required string
   productName: z.string().min(1, "Product Name is required"), // Required string
-  quantity: z
-    .coerce
+  quantity: z.coerce
     .number()
     .int()
     .positive("Quantity must be a positive integer"), // Required positive integer
   tax: z.coerce.number().min(0, "Tax must be at least 0"), // Required float (non-negative)
   totalAmount: z.coerce.number().min(0, "Total Amount must be at least 0"), // Required float (non-negative)
-  
+  date: z.string().min(1, "Date is required"),
 });
 
 type InvoiceFormValues = z.infer<typeof formSchema>;
@@ -62,7 +57,13 @@ export const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData }) => {
     resolver: zodResolver(formSchema),
     defaultValues: initialData
       ? {
-          ...initialData,
+          serialNumber: initialData.serialNumber ?? "",
+          customerName: initialData.customerName ?? "",
+          productName: initialData.productName ?? "",
+          quantity: initialData.quantity ?? 0,
+          tax: initialData.tax ?? 0,
+          totalAmount: initialData.totalAmount ?? 0,
+          date: initialData.date ?? "",
         }
       : {
           serialNumber: "",
@@ -71,6 +72,7 @@ export const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData }) => {
           quantity: 0,
           tax: 0,
           totalAmount: 0,
+          date: "",
         },
   });
 
@@ -84,7 +86,6 @@ export const InvoiceForm: React.FC<InvoiceFormProps> = ({ initialData }) => {
         tax: Number(data.tax),
         totalAmount: Number(data.totalAmount),
       };
-
 
       if (!initialData) {
         await createInvoice(formattedData);

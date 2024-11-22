@@ -18,13 +18,13 @@ model Product {
 
 model Invoice {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  serialNumber String  @unique // Serial Number
-  customerName String  // Customer Name
-  productName  String  // Product Name
-  quantity     Int     // Quantity
-  tax          Float   // Tax
-  totalAmount  Float   // Total Amount
-  date         String
+  serialNumber String?  @unique // Serial Number
+  customerName String?  // Customer Name
+  productName  String?  // Product Name
+  quantity     Int?  // Quantity
+  tax          Float?   // Tax
+  totalAmount  Float?   // Total Amount
+  date         String?
 
   @@index([customerName])
 }
