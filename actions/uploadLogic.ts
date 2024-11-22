@@ -1,3 +1,7 @@
+// 
+
+
+
 "use server";
 import { tmpdir } from "os";
 import { processDocument } from "@/actions/documentProcessing";
@@ -5,13 +9,18 @@ import { processImage } from "@/actions/imageProcessing";
 import { writeFile } from "fs/promises";
 import { join } from "path";
 import { read, utils } from "xlsx";
-import { launch } from "puppeteer";
+import { Browser as CoreBrowser } from "puppeteer-core";
+import { Browser } from "puppeteer";
+import chromium from "@sparticuz/chromium-min";
 
-export async function upload(data: FormData): Promise<{ success?: string; error?: string }> {
+export async function upload(
+  data: FormData
+): Promise<{ success?: string; error?: string }> {
   const tmpDirectory = tmpdir();
   try {
     const file: File | null = data.get("file") as unknown as File;
-    console.log(tmpDirectory)
+    // console.log(tmpDirectory);
+
     if (!file || file.size === 0) {
       return {
         error: "No file uploaded",
@@ -30,29 +39,54 @@ export async function upload(data: FormData): Promise<{ success?: string; error?
       // Get the first sheet data
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
-    
-      // Convert sheet to HTML 
+
+      // Convert sheet to HTML
       const html = utils.sheet_to_html(sheet);
 
+      console.log("control1");
       // Launch Puppeteer to convert HTML to PDF
-      const browser = await launch({
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      });
+      let browser: Browser | CoreBrowser;
+      const isProd = process.env.NODE_ENV === 'production';
+
+      console.log(isProd);
+      if (process.env.isProd) {
+        const puppeteer = await import("puppeteer-core");
+        browser = await puppeteer.launch({
+          args: chromium.args,
+          defaultViewport: chromium.defaultViewport,
+          executablePath: await chromium.executablePath(),
+          headless: chromium.headless,
+        });
+      } else {
+        const puppeteer = await import("puppeteer");
+        browser = await puppeteer.launch({
+          args: ["--no-sandbox", "--disable-setuid-sandbox"],
+          headless: true,
+        });
+      }
+
       const page = await browser.newPage();
+      console.log("control2");
+
       await page.setContent(html);
 
       // Create the PDF from the HTML content
+      console.log("control3");
+
       const num = Math.random();
+      console.log("control4");
+
       path = join(tmpDirectory, `converted_${num}.pdf`);
+      console.log("control5");
 
       await page.pdf({ path: path, format: "A4" });
-
+      console.log("control6");
       // Close the browser instance
+      console.log(path);
       await browser.close();
     } else {
       // Handle non-XLSX files by saving them directly
-      path = join(tmpDirectory , file.name);
+      path = join(tmpDirectory, file.name);
       await writeFile(path, buffer);
     }
 
