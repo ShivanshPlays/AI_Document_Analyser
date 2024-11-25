@@ -21,7 +21,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
 } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
@@ -55,7 +55,10 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     resolver: zodResolver(formSchema),
     defaultValues: initialData
       ? {
-          ...initialData,
+          name: initialData.name ?? "", // default to empty string if null
+          unitprice: initialData.unitprice ?? 0, // default to 0 if null
+          quantity: initialData.quantity ?? 0, // default to 0 if null
+          tax: initialData.tax ?? 0, // default to 0 if null
         }
       : {
           name: "",
@@ -188,7 +191,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
               )}
             />
 
-<FormField
+            <FormField
               control={form.control}
               name="tax"
               render={({ field }) => (

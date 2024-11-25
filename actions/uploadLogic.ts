@@ -1,6 +1,4 @@
-// 
-
-
+//
 
 "use server";
 import { tmpdir } from "os";
@@ -31,7 +29,7 @@ export async function upload(
     let buffer = Buffer.from(bytes);
 
     // const currentDirectory = process.cwd();
-    let path;
+    let path = "";
 
     if (file.name.endsWith(".xlsx")) {
       const workbook = read(buffer);
@@ -41,49 +39,17 @@ export async function upload(
       const sheet = workbook.Sheets[sheetName];
 
       // Convert sheet to HTML
-      const html = utils.sheet_to_html(sheet);
+      const json = utils.sheet_to_json(sheet);
+      // console.log(json);
 
-      console.log("control1");
-      // Launch Puppeteer to convert HTML to PDF
-      let browser: Browser | CoreBrowser;
-      const isProd = process.env.NODE_ENV === 'production';
+      const jsonText = JSON.stringify(json, null, 2); // Pretty print JSON with 2 spaces
 
-      console.log(isProd);
-      if (process.env.isProd) {
-        const puppeteer = await import("puppeteer-core");
-        browser = await puppeteer.launch({
-          args: chromium.args,
-          defaultViewport: chromium.defaultViewport,
-          executablePath: await chromium.executablePath(),
-          headless: chromium.headless,
-        });
-      } else {
-        const puppeteer = await import("puppeteer");
-        browser = await puppeteer.launch({
-          args: ["--no-sandbox", "--disable-setuid-sandbox"],
-          headless: true,
-        });
-      }
+      // Define the path for saving the text file
+      path = join(tmpDirectory, file.name.replace(".xlsx", ".txt"));
 
-      const page = await browser.newPage();
-      console.log("control2");
-
-      await page.setContent(html);
-
-      // Create the PDF from the HTML content
-      console.log("control3");
-
-      const num = Math.random();
-      console.log("control4");
-
-      path = join(tmpDirectory, `converted_${num}.pdf`);
-      console.log("control5");
-
-      await page.pdf({ path: path, format: "A4" });
-      console.log("control6");
-      // Close the browser instance
-      console.log(path);
-      await browser.close();
+      // Save the JSON as a text file
+      await writeFile(path, jsonText, "utf-8");
+      console.log(`Saved as text file: ${path}`);
     } else {
       // Handle non-XLSX files by saving them directly
       path = join(tmpDirectory, file.name);
@@ -92,12 +58,15 @@ export async function upload(
 
     // Check the file type and process accordingly
     if (path.endsWith(".pdf")) {
+      console.log("control");
       await processDocument(path);
     } else if (path.endsWith(".jpg")) {
       await processImage(path);
+    } else if (path.endsWith(".txt")) {
+      await processDocument(path);
     }
 
-    console.log(`File uploaded successfully at: ${path}`);
+    // console.log(`File uploaded successfully at: ${path}`);
 
     // Return success message
     return {

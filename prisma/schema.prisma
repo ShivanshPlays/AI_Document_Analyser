@@ -9,11 +9,11 @@ datasource db {
 
 model Product {
   id           String @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
-  quantity     Int
-  unitprice    Float
-  tax          Float
-  pricewithtax Float
+  name         String?
+  quantity     Int? 
+  unitprice    Float? 
+  tax          Float? 
+  pricewithtax Float? 
 }
 
 model Invoice {
@@ -31,9 +31,9 @@ model Invoice {
 
 model Customer {
   id               String  @id @default(auto()) @map("_id") @db.ObjectId
-  customerName     String
-  phoneNumber      String
-  totalPurchaseAmt Float
+  customerName     String?
+  phoneNumber      String? @default("0")
+  totalPurchaseAmt Float?
 
   @@index([customerName])
 }

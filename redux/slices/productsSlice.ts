@@ -1,15 +1,7 @@
 import { getAllProducts } from '@/actions/Products';
+import { Product } from '@prisma/client';
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
 
-type Product = {
-  id: string;
-  name: string;
-  quantity: number;
-  unitprice: number;
-  tax: number;
-  pricewithtax: number;
-};
 
 interface ProductsState {
   products: Product[];
@@ -27,7 +19,7 @@ export const fetchProducts = createAsyncThunk<Product[]>(
   'products/fetch',
   async () => {
     const products = await getAllProducts(); // Call the server action
-    return products;
+    return products || [];
   }
 );
 

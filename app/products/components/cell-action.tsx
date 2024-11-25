@@ -10,14 +10,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Product } from "@prisma/client";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { ProductColumn } from "./columns";
 
 interface CellActionProps {
-  data: ProductColumn;
+  data: Product;
 }
 
 const CellAction: React.FC<CellActionProps> = ({ data }) => {

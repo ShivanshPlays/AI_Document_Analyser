@@ -2,17 +2,11 @@
 
 import { ColumnDef } from "@tanstack/react-table"
 import CellAction from "./cell-action"
+import { Product } from "@prisma/client"
 
-export type ProductColumn = {
-  id: string
-  name:string
-  quantity:number,
-  unitprice:number,
-  tax:number,
-  pricewithtax:number
-}
 
-export const columns: ColumnDef<ProductColumn>[] = [
+
+export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "name",
     header: "Name",

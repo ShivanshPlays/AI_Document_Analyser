@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button"
 import { DataTable } from "@/components/ui/data-table"
 import { Heading } from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
-import { ProductColumn, columns } from "./columns"
+import { columns } from "./columns"
+import { Product } from "@prisma/client"
 
 interface ProductCLientProps{
-    data:ProductColumn[]
+    data:Product[]
 }
 export const ProductCLient:React.FC<ProductCLientProps> = ({
     data

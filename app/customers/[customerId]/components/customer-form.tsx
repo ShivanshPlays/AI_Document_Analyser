@@ -56,9 +56,9 @@ export const CustomerForm: React.FC<customerFormProps> = ({ initialData }) => {
     resolver: zodResolver(formSchema),
     defaultValues: initialData
       ? {
-          customerName: initialData.customerName,
-          phoneNumber: initialData.phoneNumber,
-          totalPurchaseAmt: initialData.totalPurchaseAmt,
+          customerName: initialData.customerName||"",
+          phoneNumber: initialData.phoneNumber||"0",
+          totalPurchaseAmt: initialData.totalPurchaseAmt||0,
         }
       : {
           customerName: "",
