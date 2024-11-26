@@ -1,5 +1,5 @@
 "use client";
-
+export const maxDuration = 60
 import { upload } from "@/actions/uploadLogic";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
