@@ -27,7 +27,7 @@ export function NavigationMenuDemo() {
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               <div className="font-extrabold font-serif text-xl">
                 {" "}
-                AI INVOICE MANAGER
+                AI Document MANAGER
               </div>
             </NavigationMenuLink>
           </Link>
