@@ -45,7 +45,7 @@ export function NavigationMenuDemo() {
                   >
                     <ReceiptText className="h-6 w-6" />
                     <div className="mb-2 mt-4 text-lg font-medium">
-                      AI Invoice Manager
+                      AI Document Manager
                     </div>
                   </Link>
                 </NavigationMenuLink>

@@ -16,7 +16,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "AI_Invoice_Manager",
+  title: "AI_Document_Manager",
   description: "extract data just by uploading documents!",
 };
 
