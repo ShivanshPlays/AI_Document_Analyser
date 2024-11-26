@@ -1,5 +1,6 @@
 "use client";
-export const maxDuration = 60
+
+export const maxDuration = 60;
 import { upload } from "@/actions/uploadLogic";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,11 +33,18 @@ export default function UploadPage() {
     }
   }
 
+  // Handler for form submission
+  const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Prevent default form submission behavior
+    const formData = new FormData(e.currentTarget);
+    await uploader(formData);
+  };
+
   return (
     <main className="flex justify-center items-center min-h-screen bg-gray-100 p-5">
       <Toaster />
       <form
-        action={uploader} // Use the uploader function as the form's server action
+        onSubmit={handleSubmit} // Use handleSubmit for React form handling
         className="flex flex-col items-center justify-center gap-6 bg-white shadow-lg rounded-lg p-8 w-full max-w-md border"
       >
         <h1 className="text-2xl font-semibold text-gray-700 mb-4">
